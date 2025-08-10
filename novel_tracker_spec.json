@@ -1,0 +1,66 @@
+{
+  "core_functionality": {
+    "novel_tracking": {
+      "url_input": "Add novel URLs from various websites",
+      "chapter_detection": "Automatically detect new chapters",
+      "reading_progress": "Track which chapter user has read up to",
+      "milestone_system": "Set reading milestones (e.g., read till ch 1400, milestone +50 = 1450)"
+    },
+    "notification_system": {
+      "gmail_integration": "Send notifications to Gmail when milestones reached",
+      "daily_check": "Check for updates at 8am daily",
+      "milestone_alerts": "Alert when milestone chapter count is reached"
+    },
+    "web_scraping": {
+      "multiple_sources": "Support various novel websites",
+      "authentication_handling": "Handle sites requiring login",
+      "chromium_integration": "Use browser automation for protected sites",
+      "fallback_crawling": "Basic web crawling for open sites"
+    }
+  },
+  "technical_architecture": {
+    "frontend": {
+      "framework": "HTML/CSS/JavaScript (Vanilla or React)",
+      "features": [
+        "URL input form",
+        "Progress tracker",
+        "Milestone setter",
+        "Novel list display"
+      ]
+    },
+    "backend": {
+      "server": "Node.js with Express",
+      "database": "SQLite or PostgreSQL for storing novel data",
+      "web_scraping": "Puppeteer for browser automation",
+      "scheduling": "Node-cron for daily checks"
+    },
+    "integrations": {
+      "gmail_api": "For sending notification emails",
+      "web_scraping_tools": [
+        "Puppeteer",
+        "Cheerio",
+        "Axios"
+      ]
+    }
+  },
+  "database_schema": {
+    "novels": {
+      "id": "Primary key",
+      "title": "Novel title",
+      "url": "Source URL",
+      "current_chapter": "Latest available chapter",
+      "user_progress": "Chapter user has read to",
+      "milestone_target": "Target milestone chapter",
+      "last_checked": "Last update check timestamp",
+      "status": "Active/Paused/Completed"
+    },
+    "chapters": {
+      "id": "Primary key",
+      "novel_id": "Foreign key to novels",
+      "chapter_number": "Chapter number",
+      "title": "Chapter title",
+      "url": "Chapter URL",
+      "discovered_date": "When chapter was first found"
+    }
+  }
+}

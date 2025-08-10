@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Novel Tracker - Track Your Reading Progress</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <h2>Novel Tracker</h2>
+        </div>
+        <div class="navbar-nav">
+            <button class="nav-link active" data-view="dashboard">Dashboard</button>
+            <button class="nav-link" data-view="add-novel">Add Novel</button>
+            <button class="nav-link" data-view="settings">Settings</button>
+            <button class="nav-link" data-view="notifications">Notifications</button>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Dashboard View -->
+        <div id="dashboard-view" class="view active">
+            <div class="container">
+                <div class="dashboard-header">
+                    <h1>Dashboard</h1>
+                    <button class="btn btn--primary" id="add-novel-btn">+ Add Novel</button>
+                </div>
+
+                <!-- Statistics Cards -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number" id="total-novels">0</div>
+                        <div class="stat-label">Novels Tracked</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="total-chapters">0</div>
+                        <div class="stat-label">Chapters Read</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="milestones-achieved">0</div>
+                        <div class="stat-label">Milestones Achieved</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="pending-milestones">0</div>
+                        <div class="stat-label">Pending Milestones</div>
+                    </div>
+                </div>
+
+                <!-- Search and Filter -->
+                <div class="search-section">
+                    <input type="text" class="form-control" id="search-novels" placeholder="Search novels...">
+                    <select class="form-control" id="filter-status">
+                        <option value="all">All Novels</option>
+                        <option value="active">Active</option>
+                        <option value="completed">Completed</option>
+                        <option value="milestone-reached">Milestone Reached</option>
+                    </select>
+                </div>
+
+                <!-- Novel Grid -->
+                <div class="novels-grid" id="novels-grid">
+                    <!-- Novel cards will be dynamically inserted here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Add Novel View -->
+        <div id="add-novel-view" class="view">
+            <div class="container">
+                <div class="page-header">
+                    <button class="btn btn--outline" id="back-to-dashboard">← Back to Dashboard</button>
+                    <h1>Add New Novel</h1>
+                </div>
+
+                <div class="form-container">
+                    <form id="add-novel-form">
+                        <div class="form-group">
+                            <label class="form-label" for="novel-url">Novel URL *</label>
+                            <input type="url" class="form-control" id="novel-url" required 
+                                   placeholder="https://example.com/novel-title">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="novel-title">Novel Title *</label>
+                            <input type="text" class="form-control" id="novel-title" required 
+                                   placeholder="Enter novel title">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="current-chapter">Latest Available Chapter *</label>
+                            <input type="number" class="form-control" id="current-chapter" required min="1"
+                                   placeholder="Latest chapter number on the site">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="user-progress">Your Reading Progress *</label>
+                            <input type="number" class="form-control" id="user-progress" required min="0"
+                                   placeholder="Chapter you've read up to">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="milestone-increment">Milestone Increment *</label>
+                            <input type="number" class="form-control" id="milestone-increment" required min="1" value="50"
+                                   placeholder="Number of chapters for each milestone">
+                            <small class="form-help">You'll get notified every X chapters</small>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn--primary btn--full-width">Add Novel</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Novel Detail View -->
+        <div id="novel-detail-view" class="view">
+            <div class="container">
+                <div class="page-header">
+                    <button class="btn btn--outline" id="back-from-detail">← Back to Dashboard</button>
+                    <h1 id="detail-novel-title">Novel Title</h1>
+                </div>
+
+                <div class="novel-detail-content">
+                    <div class="detail-stats">
+                        <div class="detail-stat">
+                            <span class="detail-stat-label">Latest Chapter:</span>
+                            <span class="detail-stat-value" id="detail-current-chapter">0</span>
+                        </div>
+                        <div class="detail-stat">
+                            <span class="detail-stat-label">Your Progress:</span>
+                            <span class="detail-stat-value" id="detail-user-progress">0</span>
+                        </div>
+                        <div class="detail-stat">
+                            <span class="detail-stat-label">Next Milestone:</span>
+                            <span class="detail-stat-value" id="detail-milestone">0</span>
+                        </div>
+                    </div>
+
+                    <div class="progress-section">
+                        <div class="progress-header">
+                            <h3>Reading Progress</h3>
+                            <span id="progress-percentage">0%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progress-fill"></div>
+                            <div class="milestone-marker" id="milestone-marker"></div>
+                        </div>
+                        <div class="progress-labels">
+                            <span>Chapter 0</span>
+                            <span id="progress-latest">Chapter 0</span>
+                        </div>
+                    </div>
+
+                    <div class="update-section">
+                        <h3>Update Progress</h3>
+                        <form id="update-progress-form">
+                            <div class="form-group">
+                                <label class="form-label" for="new-progress">New Reading Progress</label>
+                                <input type="number" class="form-control" id="new-progress" min="0">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="new-current-chapter">Latest Available Chapter</label>
+                                <input type="number" class="form-control" id="new-current-chapter" min="1">
+                            </div>
+                            <button type="submit" class="btn btn--primary">Update Progress</button>
+                        </form>
+                    </div>
+
+                    <div class="milestone-section">
+                        <h3>Milestone Settings</h3>
+                        <form id="update-milestone-form">
+                            <div class="form-group">
+                                <label class="form-label" for="new-milestone-increment">Milestone Increment</label>
+                                <input type="number" class="form-control" id="new-milestone-increment" min="1">
+                            </div>
+                            <button type="submit" class="btn btn--outline">Update Milestone</button>
+                        </form>
+                    </div>
+
+                    <div class="danger-section">
+                        <button class="btn btn--error" id="delete-novel-btn">Delete Novel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings View -->
+        <div id="settings-view" class="view">
+            <div class="container">
+                <div class="page-header">
+                    <button class="btn btn--outline" id="back-from-settings">← Back to Dashboard</button>
+                    <h1>Settings</h1>
+                </div>
+
+                <div class="settings-content">
+                    <div class="settings-section">
+                        <h3>Notification Settings</h3>
+                        <form id="settings-form">
+                            <div class="form-group">
+                                <label class="form-label" for="gmail-address">Gmail Address for Notifications</label>
+                                <input type="email" class="form-control" id="gmail-address" 
+                                       placeholder="your.email@gmail.com">
+                                <small class="form-help">You'll receive milestone notifications here</small>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" for="check-time">Daily Check Time</label>
+                                <input type="time" class="form-control" id="check-time" value="08:00">
+                                <small class="form-help">Time for daily chapter updates check</small>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="checkbox-container">
+                                    <input type="checkbox" id="notifications-enabled" checked>
+                                    <span class="checkbox-checkmark"></span>
+                                    Enable milestone notifications
+                                </label>
+                            </div>
+
+                            <button type="submit" class="btn btn--primary">Save Settings</button>
+                        </form>
+                    </div>
+
+                    <div class="settings-section">
+                        <h3>Data Management</h3>
+                        <div class="data-actions">
+                            <button class="btn btn--outline" id="export-data">Export Data</button>
+                            <button class="btn btn--outline" id="import-data">Import Data</button>
+                            <input type="file" id="import-file" accept=".json" class="hidden">
+                        </div>
+                    </div>
+
+                    <div class="settings-section">
+                        <h3>Browser Extension</h3>
+                        <p>For sites requiring authentication, you can use our browser extension to automatically detect chapter updates.</p>
+                        <button class="btn btn--outline" disabled>Install Extension (Coming Soon)</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Notifications View -->
+        <div id="notifications-view" class="view">
+            <div class="container">
+                <div class="page-header">
+                    <button class="btn btn--outline" id="back-from-notifications">← Back to Dashboard</button>
+                    <h1>Notifications</h1>
+                </div>
+
+                <div class="notifications-content">
+                    <div class="notification-actions">
+                        <button class="btn btn--outline" id="mark-all-read">Mark All as Read</button>
+                        <button class="btn btn--outline" id="clear-notifications">Clear All</button>
+                    </div>
+
+                    <div class="notifications-list" id="notifications-list">
+                        <!-- Notifications will be dynamically inserted here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Confirmation Modal -->
+    <div class="modal hidden" id="confirm-modal">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-title">Confirm Action</h3>
+            </div>
+            <div class="modal-body">
+                <p id="modal-message">Are you sure you want to proceed?</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn--outline" id="modal-cancel">Cancel</button>
+                <button class="btn btn--error" id="modal-confirm">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
